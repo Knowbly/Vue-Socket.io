@@ -16,7 +16,7 @@
     "vue",
     "socket",
     "socket.io",
-	"comolokko"
+    "comolokko"
   ],
   "author": "Metin Seylan",
   "license": "MIT",

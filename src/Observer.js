@@ -16,17 +16,37 @@ export default class{
     }
 
     onEvent(){
-        this.Socket.onevent = (packet) => {
-            Emitter.emit(packet.data[0], packet.data[1])
+        if (this.Socket instanceof Array) {
+            for (const socket of this.Socket) {
+                socket.onevent = (packet) => {
+                    Emitter.emit(packet.data[0], packet.data[1])
+                }
+            }
+        } else {
+            this.Socket.onevent = (packet) => {
+                Emitter.emit(packet.data[0], packet.data[1])
+            }
         }
 
-        let _this = this;
-
-        ["connect", "error", "disconnect", "reconnect", "reconnect_attempt", "reconnecting", "reconnect_error", "reconnect_failed"]
+        const _this = this;
+        const defaultEvents = ["connect", "error", "disconnect", "reconnect", "reconnect_attempt", "reconnecting", "reconnect_error", "reconnect_failed"];
+        defaultEvents
             .forEach((value) => {
-                _this.Socket.on(value, (data) => {
-                    Emitter.emit(value, data)
-                })
+                if (_this.Socket instanceof Array) {
+                    for (const socket of _this.Socket) {
+                        socket.on(value, (data) => {
+                            if (socket.name) {
+                                Emitter.emit(`${socket.name}_${value}`, data)
+                            } else {
+                                Emitter.emit(value, data);
+                            }
+                        })
+                    }
+                } else {
+                    _this.Socket.on(value, (data) => {
+                        Emitter.emit(value, data)
+                    })
+                }
             })
     }
 
