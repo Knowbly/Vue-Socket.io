@@ -36,7 +36,7 @@ export default class{
                     for (const socket of _this.Socket) {
                         socket.on(value, (data) => {
                             if (socket.name) {
-                                Emitter.emit(`${socket.name}_${value}`, data)
+                                Emitter.emit(`${socket.name.toLowerCase()}_${value}`, data)
                             } else {
                                 Emitter.emit(value, data);
                             }
