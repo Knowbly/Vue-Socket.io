@@ -25,6 +25,10 @@ Vue.use(VueSocketio, 'http://socketserver.com:1923'); // Automaticly socket conn
   var ioInstance = socketio('http://socketserver.com:1923');
   
   Vue.use(VueSocketio, ioInstance); // bind custom socketio instance
+  //or multiple connections
+  var anotherIoInstance = socketio('http://socketserver.com:1921');
+  anotherIoInstance.name = "anotherIo" // Optional
+  Vue.use(VueSocketio, [ioInstanceDefault, anotherIoInstance]);
 */
 
 var vm = new Vue({
@@ -34,12 +38,18 @@ var vm = new Vue({
     },
     customEmit: function(val){
       console.log('this method fired by socket server. eg: io.emit("customEmit", data)')
+    },
+    // Only for default events like connect, reconnect, etc. `${socketInstanceName}_${defaultEvent}`. Example:
+    anotherIo_connect: function() {
+      
     }
   },
   methods: {
     clickButton: function(val){
         // $socket is socket.io-client instance
         this.$socket.emit('emit_method', val);
+        // For another instace
+        this[`socket${instance.name}`].emit('emit_method', val);
     }
   }
 })
