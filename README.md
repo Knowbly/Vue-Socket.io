@@ -27,7 +27,7 @@ Vue.use(VueSocketio, 'http://socketserver.com:1923'); // Automaticly socket conn
   Vue.use(VueSocketio, ioInstance); // bind custom socketio instance
   //or multiple connections
   var anotherIoInstance = socketio('http://socketserver.com:1921');
-  anotherIoInstance.name = "anotherIo" // Optional
+  anotherIoInstance.name = "anotherIo" // It's neccesary for use default events (connect, reconnect, etc)
   Vue.use(VueSocketio, [ioInstanceDefault, anotherIoInstance]);
 */
 
