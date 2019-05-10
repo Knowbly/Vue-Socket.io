@@ -8,8 +8,19 @@ export default {
         if(!connection) throw new Error("[Vue-Socket.io] cannot locate connection")
 
         let observer = new Observer(connection)
+        
+        if (observer.Socket instanceof Array) {
+            for (const socketInstance of observer.Socket) {
+                if (socketInstance.isDefault) {
+                    Vue.prototype.$socket = socketInstance;
+                } else {
+                    Vue.prototype[`$socket${socketInstance.name}`] = socketInstance;
+                }
+            }
 
-        Vue.prototype.$socket = observer.Socket;
+        } else {
+            Vue.prototype.$socket = observer.Socket;
+        }
 
         Vue.mixin({
             beforeCreate(){
